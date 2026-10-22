@@ -1,0 +1,15 @@
+{
+  "radii_m": [0.03, 0.04, 0.055, 0.08],
+  "length_m": 1.2,
+  "layers": [
+    {"rho_kg_m3": 7800, "cp_j_kg_k": 490, "k0_w_m_k": 16, "alpha_per_k": 0.0005, "initial_c": 85, "q_gen_w_m3": 0},
+    {"rho_kg_m3": 120, "cp_j_kg_k": 1400, "k0_w_m_k": 0.05, "alpha_per_k": 0.002, "initial_c": 70, "q_gen_w_m3": 0},
+    {"rho_kg_m3": 95, "cp_j_kg_k": 1100, "k0_w_m_k": 0.042, "alpha_per_k": 0.001, "initial_c": 45, "q_gen_w_m3": 0}
+  ],
+  "schedule": [
+    {"start_s": 0, "inner_flux_w_m2": 0, "ambient_c": 18, "h_w_m2_k": 8, "epsilon": 0.8},
+    {"start_s": 10, "inner_flux_w_m2": 200, "ambient_c": 12, "h_w_m2_k": 16, "epsilon": 0.8}
+  ],
+  "dt_s": 2,
+  "steps": 10
+}

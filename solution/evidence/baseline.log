@@ -1,0 +1,344 @@
+Command: docker run --rm --user 10001:10001 --network host -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/radial-quality-defbi9gm/baseline/workspace:/workspace:ro -v /Users/zhangchengcheng/work/ai-project/Trea/harbor/radial-thermal-transient/tests:/tests:ro -v /var/folders/8t/8rw7_pg16cx2c2mkh_cvpz8m0000gn/T/radial-quality-defbi9gm/baseline/logs:/logs harbor-quality:radial-thermal-transient bash /tests/test.sh
+Exit: 0
+Reward: 0.0
+stdout:
+Collecting pytest==8.4.1 (from -r /tests/requirements.txt (line 1))
+  Downloading pytest-8.4.1-py3-none-any.whl (365 kB)
+Collecting iniconfig==2.3.1 (from -r /tests/requirements.txt (line 2))
+  Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+Collecting packaging==26.3 (from -r /tests/requirements.txt (line 3))
+  Downloading packaging-26.3-py3-none-any.whl (129 kB)
+Collecting pluggy==1.7.0 (from -r /tests/requirements.txt (line 4))
+  Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+Collecting pygments==2.21.0 (from -r /tests/requirements.txt (line 5))
+  Downloading pygments-2.21.0-py3-none-any.whl (1.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.3/1.3 MB 5.2 MB/s eta 0:00:00
+Installing collected packages: pygments, pluggy, packaging, iniconfig, pytest
+Successfully installed iniconfig-2.3.1 packaging-26.3 pluggy-1.7.0 pygments-2.21.0 pytest-8.4.1
+
+stderr:
+  WARNING: The script pygmentize is installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+  WARNING: The scripts py.test and pytest are installed in '/home/worker/.local/bin' which is not on PATH.
+  Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
+
+[c1]
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+________________________ test_c1_two_layer_radial_flow _________________________
+
+    def test_c1_two_layer_radial_flow():
+        """Match a two-layer radial temperature history."""
+        data = case(temperatures=[95, 30], steps=4)
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 276.4804531479088, 'residual_j': 5.894662535865791e-11, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 95, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k....0, 'cp_j_kg_k': 1070, 'initial_c': 30, 'k0_w_m_k': 0.43, ...}], 'length_m': 1.3, 'radii_m': [0.025, 0.04, 0.065], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 276.4804531479088, 'residual_j': 5.894662535865791e-11, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 95, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k....0, 'cp_j_kg_k': 1070, 'initial_c': 30, 'k0_w_m_k': 0.43, ...}], 'length_m': 1.3, 'radii_m': [0.025, 0.04, 0.065], ...})
+
+/tests/test_outputs.py:146: AssertionError
+______________________ test_c1_irregular_cells_and_length ______________________
+
+    def test_c1_irregular_cells_and_length():
+        """Match nonuniform cells with a longer pipe segment."""
+        data = case(radii=[0.018, 0.019, 0.08, 0.095],
+                    temperatures=[100, 48, 22], steps=5, length=2.7)
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...10, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 573.2429073818629, 'residual_j': 2.708020474528894e-10, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 100, 'k0_w_m_k': 0.35, ...}, {'alpha_per_..._j_kg_k': 1160, 'initial_c': 22, 'k0_w_m_k': 0.51, ...}], 'length_m': 2.7, 'radii_m': [0.018, 0.019, 0.08, 0.095], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...10, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 573.2429073818629, 'residual_j': 2.708020474528894e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 100, 'k0_w_m_k': 0.35, ...}, {'alpha_per_..._j_kg_k': 1160, 'initial_c': 22, 'k0_w_m_k': 0.51, ...}], 'length_m': 2.7, 'radii_m': [0.018, 0.019, 0.08, 0.095], ...})
+
+/tests/test_outputs.py:153: AssertionError
+_______________________ test_c1_heterogeneous_interface ________________________
+
+    def test_c1_heterogeneous_interface():
+        """Match an interface where adjacent layers have different conductivities."""
+        data = case(radii=[0.02, 0.028, 0.042, 0.067], temperatures=[90, 50, 20])
+        data["layers"][1]["k0_w_m_k"] = 0.025
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 74.32364221241497, 'residual_j': 1.858779796748422e-11, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k..._j_kg_k': 1160, 'initial_c': 20, 'k0_w_m_k': 0.51, ...}], 'length_m': 1.3, 'radii_m': [0.02, 0.028, 0.042, 0.067], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 74.32364221241497, 'residual_j': 1.858779796748422e-11, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k..._j_kg_k': 1160, 'initial_c': 20, 'k0_w_m_k': 0.51, ...}], 'length_m': 1.3, 'radii_m': [0.02, 0.028, 0.042, 0.067], ...})
+
+/tests/test_outputs.py:160: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-ii427yyt'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-dqgbv2lu'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c1_two_layer_radial_flow - AssertionErr...
+FAILED ../tests/test_outputs.py::test_c1_irregular_cells_and_length - Asserti...
+FAILED ../tests/test_outputs.py::test_c1_heterogeneous_interface - AssertionE...
+3 failed, 1 passed, 16 deselected, 2 warnings in 0.25s
+
+
+[c2]
+FF..                                                                     [100%]
+=================================== FAILURES ===================================
+__________________ test_c2_temperature_dependent_conductivity __________________
+
+    def test_c2_temperature_dependent_conductivity():
+        """Evaluate conductivity at the current cell temperature."""
+        data = case(radii=[0.03, 0.07], temperatures=[90], alpha=0.03, steps=5)
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...-11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 2039.35694910017, 'residual_j': 4.501998773775995e-11, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.03, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...-11, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 2039.35694910017, 'residual_j': 4.501998773775995e-11, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.03, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:173: AssertionError
+_______________________ test_c2_schedule_at_exact_switch _______________________
+
+    def test_c2_schedule_at_exact_switch():
+        """Apply the new boundary segment exactly at its start time."""
+        data = case(radii=[0.03, 0.07], temperatures=[70], steps=5, dt=2)
+        data["schedule"].append({"start_s": 4, "inner_flux_w_m2": -180,
+                                 "ambient_c": 5, "h_w_m2_k": 25, "epsilon": 0.0})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...ted_j': 0.0, 'inner_j': -264.64776513840417, 'outer_j': 2909.3750023068515, 'residual_j': -6.912159733474255e-11, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 2, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 70, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...ted_j': 0.0, 'inner_j': -264.64776513840417, 'outer_j': 2909.3750023068515, 'residual_j': -6.912159733474255e-11, ...}] = reference({'dt_s': 2, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 70, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:181: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-y9tgykby'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-m737z1vs'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c2_temperature_dependent_conductivity
+FAILED ../tests/test_outputs.py::test_c2_schedule_at_exact_switch - Assertion...
+2 failed, 2 passed, 16 deselected, 2 warnings in 0.24s
+
+
+[c3]
+F.FF                                                                     [100%]
+=================================== FAILURES ===================================
+____________________________ test_c3_energy_ledger _____________________________
+
+    def test_c3_energy_ledger():
+        """Keep the heat ledger consistent with storage change."""
+        data = case(radii=[0.02, 0.07], temperatures=[40], steps=4)
+        data["schedule"][0].update({"inner_flux_w_m2": 1000, "h_w_m2_k": 0})
+>       assert _matches(_rows(data), reference(data), LEDGER)
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 163.362...10, ...}, {'generated_j': 0.0, 'inner_j': 653.451271946677, 'outer_j': 0.0, 'residual_j': 1.8428636394673958e-10, ...}], ('inner_j', 'outer_j', 'generated_j', 'stored_j', 'residual_j'))
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.02, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 163.362...10, ...}, {'generated_j': 0.0, 'inner_j': 653.451271946677, 'outer_j': 0.0, 'residual_j': 1.8428636394673958e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.02, 0.07], ...})
+
+/tests/test_outputs.py:201: AssertionError
+____________________ test_c3_unstable_step_has_no_artifact _____________________
+
+    def test_c3_unstable_step_has_no_artifact():
+        """Reject an unstable time step without leaving an output file."""
+        data = case(radii=[0.03, 0.07], temperatures=[70], dt=1e9, steps=1)
+        status, payload, _stderr = _run(data)
+>       assert status != 0 and payload is None
+E       assert (0 != 0)
+
+/tests/test_outputs.py:222: AssertionError
+________________ test_c3_invalid_inputs_do_not_replace_artifact ________________
+
+    def test_c3_invalid_inputs_do_not_replace_artifact():
+        """Reject invalid inputs without overwriting an existing artifact."""
+        invalid = [
+            {"radii_m": [0.03, 0.03]},
+            {"layers": [{"rho_kg_m3": 850, "cp_j_kg_k": 980, "k0_w_m_k": -1,
+                         "alpha_per_k": 0, "q_gen_w_m3": 0, "initial_c": 40}]},
+            {"schedule": [{"start_s": 2, "inner_flux_w_m2": 0, "ambient_c": 10,
+                           "h_w_m2_k": 5, "epsilon": 0.0}]},
+            {"schedule": [{"start_s": 0, "inner_flux_w_m2": 0, "ambient_c": 10,
+                           "h_w_m2_k": 5, "epsilon": 1.5}]},
+        ]
+        outcomes = []
+        for change in invalid:
+            data = case(radii=[0.03, 0.07], temperatures=[40])
+            data.update(change)
+            status, payload, _stderr = _run(data, existing="previous valid result")
+            outcomes.append(status != 0 and payload == "previous valid result")
+>       assert all(outcomes)
+E       assert False
+E        +  where False = all([True, False, False, False])
+
+/tests/test_outputs.py:242: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-rtadb1a_'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-69eyzgqc'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c3_energy_ledger - AssertionError: asse...
+FAILED ../tests/test_outputs.py::test_c3_unstable_step_has_no_artifact - asse...
+FAILED ../tests/test_outputs.py::test_c3_invalid_inputs_do_not_replace_artifact
+3 failed, 1 passed, 16 deselected, 2 warnings in 0.41s
+
+
+[c4]
+FFF.                                                                     [100%]
+=================================== FAILURES ===================================
+___________________ test_c4_generation_heats_insulated_cell ____________________
+
+    def test_c4_generation_heats_insulated_cell():
+        """Heat an insulated cell by its volumetric source."""
+        data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=5000)
+        data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 81.68140899333464, 'inn... ...}, {'generated_j': 326.72563597333857, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -2.8762769943568856e-11, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 81.68140899333464, 'inn... ...}, {'generated_j': 326.72563597333857, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -2.8762769943568856e-11, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:249: AssertionError
+____________________ test_c4_generated_ledger_and_residual _____________________
+
+    def test_c4_generated_ledger_and_residual():
+        """Include generated heat in the ledger and keep the residual near zero."""
+        data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=2000)
+        data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
+>       assert _matches(_rows(data), reference(data), LEDGER)
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 32.672563597333856, 'in... ...}, {'generated_j': 130.69025438933542, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -1.6621015674900264e-10, ...}], ('inner_j', 'outer_j', 'generated_j', 'stored_j', 'residual_j'))
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 32.672563597333856, 'in... ...}, {'generated_j': 130.69025438933542, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -1.6621015674900264e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 40, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:256: AssertionError
+_______________________ test_c4_negative_generation_sink _______________________
+
+    def test_c4_negative_generation_sink():
+        """Treat a negative source as a heat sink that lowers temperature."""
+        data = case(radii=[0.03, 0.07], temperatures=[60], steps=4, q_gen=-3000)
+        data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': -49.00884539600079, 'in......}, {'generated_j': -196.03538158400315, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -1.3744738680543378e-10, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 60, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': -49.00884539600079, 'in......}, {'generated_j': -196.03538158400315, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': -1.3744738680543378e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 60, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:263: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-dntotl7t'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-ua7tjtrp'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c4_generation_heats_insulated_cell - As...
+FAILED ../tests/test_outputs.py::test_c4_generated_ledger_and_residual - Asse...
+FAILED ../tests/test_outputs.py::test_c4_negative_generation_sink - Assertion...
+3 failed, 1 passed, 16 deselected, 2 warnings in 0.25s
+
+
+[c5]
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+__________________ test_c5_radiation_cools_insulated_surface ___________________
+
+    def test_c5_radiation_cools_insulated_surface():
+        """Lose heat from an insulated surface through radiation alone."""
+        data = case(radii=[0.03, 0.07], temperatures=[120], steps=4)
+        data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o..., ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 1982.2814977938774, 'residual_j': 1.0800249583553523e-10, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 120, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o..., ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 1982.2814977938774, 'residual_j': 1.0800249583553523e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 120, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:284: AssertionError
+___________________ test_c5_radiation_and_convection_combine ___________________
+
+    def test_c5_radiation_and_convection_combine():
+        """Combine convection and radiation at the outer surface."""
+        data = case(radii=[0.03, 0.07], temperatures=[90], steps=3)
+        data["schedule"][0].update({"h_w_m2_k": 10, "epsilon": 0.8})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o..., ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 1584.8611820105211, 'residual_j': -1.134594640461728e-10, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o..., ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 1584.8611820105211, 'residual_j': -1.134594640461728e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 90, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:291: AssertionError
+________________________ test_c5_radiation_kelvin_scale ________________________
+
+    def test_c5_radiation_kelvin_scale():
+        """Evaluate the T^4 radiation term on the Kelvin scale."""
+        data = case(radii=[0.03, 0.07], temperatures=[200], steps=4)
+        data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
+>       assert _matches(_rows(data), reference(data), ())
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 5038.141511124867, 'residual_j': 4.2928149923682213e-10, ...}], ())
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}] = _rows({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 200, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'o...0, ...}, {'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 5038.141511124867, 'residual_j': 4.2928149923682213e-10, ...}] = reference({'dt_s': 1.0, 'layers': [{'alpha_per_k': 0.0, 'cp_j_kg_k': 980, 'initial_c': 200, 'k0_w_m_k': 0.35, ...}], 'length_m': 1.3, 'radii_m': [0.03, 0.07], ...})
+
+/tests/test_outputs.py:298: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-3epgfsn4'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-m43wmyck'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c5_radiation_cools_insulated_surface - ...
+FAILED ../tests/test_outputs.py::test_c5_radiation_and_convection_combine - A...
+FAILED ../tests/test_outputs.py::test_c5_radiation_kelvin_scale - AssertionEr...
+3 failed, 17 deselected, 2 warnings in 0.19s
+
+
+[e2e]
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_e2e_multilayer_non_linear_schedule_and_ledger ______________
+
+    def test_e2e_multilayer_non_linear_schedule_and_ledger():
+        """Match a full multi-layer nonlinear case with a scheduled source."""
+        data = case(radii=[0.018, 0.025, 0.04, 0.07], temperatures=[95, 75, 45],
+                    alpha=0.008, steps=7, dt=3, length=1.8, q_gen=1500)
+        data["layers"][1]["q_gen_w_m3"] = 0
+        data["schedule"].append({"start_s": 9, "inner_flux_w_m2": -60,
+                                 "ambient_c": 6, "h_w_m2_k": 22, "epsilon": 0.9})
+>       assert _matches(_rows(data), reference(data), LEDGER)
+E       AssertionError: assert False
+E        +  where False = _matches([{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...esidual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, ...], [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 91.63428867917247, 'inn...339586235, 'inner_j': -73.28707342294268, 'outer_j': 5485.020419463043, 'residual_j': -9.00968188943807e-11, ...}, ...], ('inner_j', 'outer_j', 'generated_j', 'stored_j', 'residual_j'))
+E        +    where [{'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual...esidual_j': 0.0, 'stored_j': 0.0, ...}, {'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, 'stored_j': 0.0, ...}, ...] = _rows({'dt_s': 3, 'layers': [{'alpha_per_k': 0.008, 'cp_j_kg_k': 980, 'initial_c': 95, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k...p_j_kg_k': 1160, 'initial_c': 45, 'k0_w_m_k': 0.51, ...}], 'length_m': 1.8, 'radii_m': [0.018, 0.025, 0.04, 0.07], ...})
+E        +    and   [{'generated_j': 0.0, 'inner_j': 0.0, 'outer_j': 0.0, 'residual_j': 0.0, ...}, {'generated_j': 91.63428867917247, 'inn...339586235, 'inner_j': -73.28707342294268, 'outer_j': 5485.020419463043, 'residual_j': -9.00968188943807e-11, ...}, ...] = reference({'dt_s': 3, 'layers': [{'alpha_per_k': 0.008, 'cp_j_kg_k': 980, 'initial_c': 95, 'k0_w_m_k': 0.35, ...}, {'alpha_per_k...p_j_kg_k': 1160, 'initial_c': 45, 'k0_w_m_k': 0.51, ...}], 'length_m': 1.8, 'radii_m': [0.018, 0.025, 0.04, 0.07], ...})
+
+/tests/test_outputs.py:308: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-eupwlkzw'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-yaztziws'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_e2e_multilayer_non_linear_schedule_and_ledger
+1 failed, 19 deselected, 2 warnings in 0.08s

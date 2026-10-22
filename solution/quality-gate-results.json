@@ -1,0 +1,57 @@
+{
+  "baseline": {
+    "reward": 0.0,
+    "evidence": "solution/evidence/baseline.log"
+  },
+  "oracle": {
+    "reward": 1.0,
+    "evidence": "solution/evidence/oracle.log"
+  },
+  "partials": [
+    {
+      "challenge_id": "C1",
+      "reward": 0.1,
+      "evidence": "solution/evidence/partial-c1.log"
+    },
+    {
+      "challenge_id": "C2",
+      "reward": 0.1,
+      "evidence": "solution/evidence/partial-c2.log"
+    },
+    {
+      "challenge_id": "C3",
+      "reward": 0.1,
+      "evidence": "solution/evidence/partial-c3.log"
+    },
+    {
+      "challenge_id": "C4",
+      "reward": 0.2,
+      "evidence": "solution/evidence/partial-c4.log"
+    },
+    {
+      "challenge_id": "C5",
+      "reward": 0.3,
+      "evidence": "solution/evidence/partial-c5.log"
+    }
+  ],
+  "bypasses": [
+    {
+      "id": "B1",
+      "description": "仅返回空记录数组",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-empty.log"
+    },
+    {
+      "id": "B2",
+      "description": "固定返回一条公开样例记录",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-fixed.log"
+    },
+    {
+      "id": "B3",
+      "description": "删除核心求解模块",
+      "reward": 0.0,
+      "evidence": "solution/evidence/bypass-delete.log"
+    }
+  ]
+}

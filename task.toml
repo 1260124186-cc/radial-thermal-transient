@@ -1,0 +1,27 @@
+schema_version = "1.3"
+
+[task]
+name = "local/radial-thermal-transient"
+description = "修正电伴热多层保温管径向瞬态传热、辐射散热与热量账计算"
+authors = [{ name = "Chengcheng Zhang" }]
+keywords = ["transient heat transfer", "finite volume", "cylindrical conduction", "radiation", "energy balance"]
+
+[agent]
+timeout_sec = 3600
+
+[environment]
+build_timeout_sec = 900
+cpus = 1
+memory_mb = 2048
+storage_mb = 4096
+gpus = 0
+allow_internet = true
+
+[verifier]
+timeout_sec = 300
+
+[metadata]
+difficulty = "expert"
+category = "D-物理模拟"
+tags = ["Python", "heat transfer", "numerical simulation"]
+expert_time_estimate = "4h"

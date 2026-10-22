@@ -1,0 +1,54 @@
+{
+  "name": "radial-thermal-transient",
+  "category": "D-物理模拟",
+  "scene": "停产电伴热保温管的径向瞬态降温，伴热元件仍发热，外壁同时有对流与辐射散热",
+  "core_task": "补全轴对称有限体积热平衡：圆柱径向导热、温度依赖导热率、分段对流与辐射边界、体积热源、显式稳定判据与能量守恒账目",
+  "data_provenance": {
+    "kind": "modeled",
+    "source": "工程参数在 environment/workspace/example.json 中逐项列明；半径、材料系数、边界时序、热源、发射率及初温均为演示用模型输入，不表示现场采集，也不从观测记录推导"
+  },
+  "answer_verification": "用独立有限体积实现复算：每格热容 rho*cp*pi*(ro^2-ri^2)*L，界面串联对数半格热阻，外表面再串联半格热阻与对流膜阻，并叠加 epsilon*sigma*A*(T_k^4-Tamb_k^4) 辐射项；显式稳定导纳再加 4*epsilon*sigma*A*T_k^3；逐时步核对温度、累计内壁输入、外散热、热源、储能与残差。",
+  "environment": {
+    "base_image": "python:3.12.8-slim-bookworm@sha256:2199a62885a12290dc9c5be3ca0681d367576ab7bf037da120e564723292a2f0",
+    "dependencies_locked": true,
+    "allow_internet": true,
+    "network_reason": "求解器本身只用标准库且输入随镜像提供；但验证阶段 test.sh 需从 PyPI 按哈希锁定安装 pytest 等测试依赖，故运行期需要网络",
+    "architectures": ["amd64", "arm64"]
+  },
+  "requirements": [
+    {"id": "R1", "statement": "使用环形控制体真实体积和圆柱对数径向热阻", "observable": "不同网格半径、长度和层间导热率下温度历程正确", "expected_basis": "独立环形体积和对数半格热阻公式", "test_ids": ["T1", "T2", "T3", "T4", "T20"]},
+    {"id": "R2", "statement": "按旧温度更新导热率，并按左闭右开时序选用边界参数", "observable": "非线性材料与分段边界改变温度轨迹；热流密度按圆柱面积换算", "expected_basis": "k=k0*(1+alpha*(T-20))，分段取 start_s<=t 的最后一段，面积 2*pi*r*L", "test_ids": ["T5", "T6", "T7", "T8", "T20"]},
+    {"id": "R3", "statement": "用显式稳定上限在写文件前拒收不稳定步长和非法输入", "observable": "等于上限的步长可运行，超过上限或坏输入非零退出且无产物", "expected_basis": "dt<=C_i/(G_left+G_right)，最外层再加对流与线性化辐射导纳；边界热流密度和热源不计入", "test_ids": ["T9", "T10", "T11", "T12", "T20"]},
+    {"id": "R4", "statement": "把体积热源并入能量平衡并计入累计热源和残差", "observable": "正负热源改变温度与 generated_j，残差仍趋近 0，且热源不影响稳定上限", "expected_basis": "热源功率 q_gen*V，残差 stored-inner+outer-generated", "test_ids": ["T13", "T14", "T15", "T16", "T20"]},
+    {"id": "R5", "statement": "外壁同时按对流和 Stefan-Boltzmann 辐射散热，辐射用开尔文温标", "observable": "发射率改变温度轨迹，辐射热流用 T^4 开尔文项，稳定导纳含 4*epsilon*sigma*A*T_k^3", "expected_basis": "q_rad=epsilon*sigma*A*(T_k^4-Tamb_k^4)，rad_g=4*epsilon*sigma*A*T_k^3", "test_ids": ["T17", "T18", "T19", "T20"]}
+  ],
+  "tests": [
+    {"id": "T1", "kind": "normal", "requirement_ids": ["R1"], "expected": "双层同质管温度匹配独立复算"},
+    {"id": "T2", "kind": "boundary", "requirement_ids": ["R1"], "expected": "变长、非等距半径下保持环形体积和对数热阻"},
+    {"id": "T3", "kind": "normal", "requirement_ids": ["R1"], "expected": "多层异质界面串联热阻正确"},
+    {"id": "T4", "kind": "boundary", "requirement_ids": ["R1"], "expected": "零内热流、等温且绝热时保持不变"},
+    {"id": "T5", "kind": "normal", "requirement_ids": ["R2"], "expected": "温度依赖导热率用旧时刻温度评估"},
+    {"id": "T6", "kind": "boundary", "requirement_ids": ["R2"], "expected": "分段切换时刻采用新段的边界参数"},
+    {"id": "T7", "kind": "normal", "requirement_ids": ["R2"], "expected": "内壁热流密度按实际圆柱面积转换"},
+    {"id": "T8", "kind": "normal", "requirement_ids": ["R2"], "expected": "外壁半格导热与对流膜热阻串联"},
+    {"id": "T9", "kind": "normal", "requirement_ids": ["R3"], "expected": "累计输入、流出、储能与残差和独立求和一致"},
+    {"id": "T10", "kind": "boundary", "requirement_ids": ["R3"], "expected": "刚好等于稳定上限的时间步可运行"},
+    {"id": "T11", "kind": "exception", "requirement_ids": ["R3"], "expected": "超出稳定上限时非零退出且无输出文件"},
+    {"id": "T12", "kind": "exception", "requirement_ids": ["R3"], "expected": "非法半径、导热率、工况或发射率时非零退出且不覆盖产物"},
+    {"id": "T13", "kind": "normal", "requirement_ids": ["R4"], "expected": "正热源使绝热单格温度线性上升"},
+    {"id": "T14", "kind": "normal", "requirement_ids": ["R4"], "expected": "累计热源与残差和独立求和一致"},
+    {"id": "T15", "kind": "normal", "requirement_ids": ["R4"], "expected": "负热源作为热汇使温度下降"},
+    {"id": "T16", "kind": "boundary", "requirement_ids": ["R4"], "expected": "热源不影响稳定上限，等于上限的步长仍可运行"},
+    {"id": "T17", "kind": "normal", "requirement_ids": ["R5"], "expected": "绝热表面仅靠辐射散热时温度下降正确"},
+    {"id": "T18", "kind": "normal", "requirement_ids": ["R5"], "expected": "对流与辐射叠加后温度轨迹正确"},
+    {"id": "T19", "kind": "boundary", "requirement_ids": ["R5"], "expected": "高温工况下 T^4 辐射项按开尔文温标计算"},
+    {"id": "T20", "kind": "normal", "requirement_ids": ["R1", "R2", "R3", "R4", "R5"], "expected": "多层非线性带热源与辐射的分段工况完整账目匹配"}
+  ],
+  "challenges": [
+    {"id": "C1", "description": "圆柱几何与异质界面", "failure_mode": "把环形网格当平板会在非等距半径和层界面算错温差", "fix_action": "实现环形体积与对数半格热阻的串联导热", "requirement_ids": ["R1"], "test_ids": ["T1", "T2", "T3", "T4"]},
+    {"id": "C2", "description": "随温度变化的导热率与分段边界", "failure_mode": "沿用初始导热率或整段固定边界会在切换后偏离温度轨迹", "fix_action": "每步从旧温度更新导热率并在时序中选取边界", "requirement_ids": ["R2"], "test_ids": ["T5", "T6", "T7", "T8"]},
+    {"id": "C3", "description": "显式稳定性与输入拒收", "failure_mode": "过大步长或坏输入会留下无效产物", "fix_action": "在写文件前按显式稳定上限和参数检查拒绝非法工况", "requirement_ids": ["R3"], "test_ids": ["T9", "T10", "T11", "T12"]},
+    {"id": "C4", "description": "体积热源与守恒账目", "failure_mode": "漏加热源或把热源计入稳定判据会使温度与残差错误", "fix_action": "把热源功率并入能量平衡并累计，残差含 generated 项", "requirement_ids": ["R4"], "test_ids": ["T13", "T14", "T15", "T16"]},
+    {"id": "C5", "description": "外壁辐射散热", "failure_mode": "忽略辐射、用摄氏度算 T^4 或漏掉线性化辐射导纳会使温度和稳定判据错误", "fix_action": "叠加开尔文 T^4 辐射热流，并在稳定导纳中加入 4*epsilon*sigma*A*T_k^3", "requirement_ids": ["R5"], "test_ids": ["T17", "T18", "T19"]}
+  ]
+}
