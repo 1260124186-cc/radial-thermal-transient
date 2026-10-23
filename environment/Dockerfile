@@ -15,7 +15,8 @@ arch_map = {
 }
 arch, expected = arch_map[platform.machine()]
 filename = f"node-v{version}-linux-{arch}.tar.xz"
-with urllib.request.urlopen(f"https://npmmirror.com/mirrors/node/v{version}/{filename}") as response:
+url = f"https://npmmirror.com/mirrors/node/v{version}/{filename}"
+with urllib.request.urlopen(url) as response:
     archive_bytes = response.read()
 if hashlib.sha256(archive_bytes).hexdigest() != expected:
     raise SystemExit("Node.js archive checksum mismatch")
@@ -25,10 +26,15 @@ os.rename(f"/opt/node-v{version}-linux-{arch}", "/opt/node")
 PY
 
 ENV PATH="/opt/node/bin:${PATH}"
+
 RUN npm install --registry=https://registry.npmmirror.com -g @openai/codex@0.163.0 \
     && rm -rf /root/.npm \
+    && rm -rf /opt/node/include /opt/node/share \
+    && rm -rf /opt/node/lib/node_modules/npm /opt/node/lib/node_modules/corepack \
+    && rm -rf /opt/node/CHANGELOG.md /opt/node/LICENSE /opt/node/README.md \
+    && find /opt/node/lib/node_modules/@openai -type d -path '*/codex-resources/voice' -exec rm -rf {} + \
+    && find /opt/node/lib/node_modules/@openai -type f -name 'codex-code-mode-host' -delete \
     && ln -sf /opt/node/bin/node /usr/local/bin/node \
-    && ln -sf /opt/node/bin/npm /usr/local/bin/npm \
     && ln -sf /opt/node/bin/codex /usr/local/bin/codex
 
 RUN find /usr/local/lib/python3.12 -type f -name '*.pyc' -delete \
