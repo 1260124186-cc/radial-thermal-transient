@@ -1,0 +1,469 @@
+{
+  "version": 3,
+  "reviewed_instruction_word_by_word": true,
+  "reviewed_tests_after_authoring": true,
+  "reviewed_atomicity": true,
+  "reviewed_category_mapping": true,
+  "instruction_sha256": "1eb56618b233685cd1d0778b2787d3550cca487c5f1cf5eee4084db0c051e56c",
+  "tests_sha256": "0c39565d2af185d71a98dc4ac81b09ba331ff9130029c495468288fbf3374b3f",
+  "oracle_cases_sha256": "8eab5c4d90283526b2f3e6f91a99316e1d26d485ebd0f7d501854e1810db7169",
+  "coverage_packages": {
+    "json_text": {
+      "applicable": true,
+      "behavior_ids": [
+        "CLI-01",
+        "GEO-01",
+        "GEO-02",
+        "GEO-03",
+        "MAT-01",
+        "MAT-03",
+        "MAT-04",
+        "NUM-01",
+        "NUM-02",
+        "NUM-03",
+        "HEAT-01",
+        "HEAT-02",
+        "HEAT-03",
+        "HEAT-04",
+        "RAD-01",
+        "RAD-02",
+        "RAD-03",
+        "FULL-01",
+        "VAL-03",
+        "TIME-01"
+      ]
+    },
+    "filesystem": {
+      "applicable": false,
+      "reason": "该题不涉及此契约类别"
+    },
+    "database": {
+      "applicable": false,
+      "reason": "该题不涉及此契约类别"
+    },
+    "time_selection": {
+      "applicable": true,
+      "behavior_ids": [
+        "MAT-02",
+        "SCH-02"
+      ]
+    },
+    "atomic_publish": {
+      "applicable": true,
+      "behavior_ids": [
+        "NUM-04",
+        "VAL-01",
+        "VAL-02"
+      ]
+    },
+    "http_network": {
+      "applicable": false,
+      "reason": "该题不涉及此契约类别"
+    },
+    "initial_baseline": {
+      "applicable": true,
+      "behavior_ids": [
+        "GEO-04"
+      ]
+    }
+  },
+  "behaviors": [
+    {
+      "id": "CLI-01",
+      "location": "instruction.md",
+      "source_text": "程序入口保持不变：",
+      "behavior": "把命令行参数个数判断改成 9，使标准两参数调用直接失败",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把命令行参数个数判断改成 9，使标准两参数调用直接失败",
+      "kind": "fail_to_pass",
+      "case_id": "cli01"
+    },
+    {
+      "id": "GEO-01",
+      "location": "instruction.md",
+      "source_text": "热量只沿半径方向流动",
+      "behavior": "把每格热容整体放大百分之一，使温度推进速率偏离参考值",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c1_geo01_time01_two_layer_radial_flow",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把每格热容整体放大百分之一，使温度推进速率偏离参考值",
+      "kind": "fail_to_pass",
+      "case_id": "geo01"
+    },
+    {
+      "id": "GEO-02",
+      "location": "instruction.md",
+      "source_text": "长度比 `layers` 多 1",
+      "behavior": "在环形体积里丢掉管段长度，使非等距、变长网格热容错误",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c1_geo02_irregular_cells_and_length",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "在环形体积里丢掉管段长度，使非等距、变长网格热容错误",
+      "kind": "fail_to_pass",
+      "case_id": "geo02"
+    },
+    {
+      "id": "GEO-03",
+      "location": "instruction.md",
+      "source_text": "必须把两侧的圆柱径向导热热阻串联起来得到该界面的导热",
+      "behavior": "把界面半格圆柱热阻换成平板热阻，异质界面温差会偏离",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c1_geo03_heterogeneous_interface",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把界面半格圆柱热阻换成平板热阻，异质界面温差会偏离",
+      "kind": "fail_to_pass",
+      "case_id": "geo03"
+    },
+    {
+      "id": "GEO-04",
+      "location": "instruction.md",
+      "source_text": "取该格两侧边界半径的算术中点作为格心半径",
+      "behavior": "让绝热外壁凭空漏出 1 瓦，等温工况不再保持不变",
+      "category": "initial_baseline",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c1_geo04_uniform_insulated_state",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "让绝热外壁凭空漏出 1 瓦，等温工况不再保持不变",
+      "kind": "fail_to_pass",
+      "case_id": "geo04"
+    },
+    {
+      "id": "MAT-01",
+      "location": "instruction.md",
+      "source_text": "导热率随格温变化，关系为 `k = k0*(1 + alpha*(T-20))`",
+      "behavior": "忽略温度依赖项，直接用 20 度基准导热率",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c2_mat01_temperature_dependent_conductivity",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "忽略温度依赖项，直接用 20 度基准导热率",
+      "kind": "fail_to_pass",
+      "case_id": "mat01"
+    },
+    {
+      "id": "MAT-02",
+      "location": "instruction.md",
+      "source_text": "`schedule` 按 `start_s` 升序列出边界工况，第一段必须从 0 开始",
+      "behavior": "把分段切换改成右闭区间，切换时刻会用错分段",
+      "category": "time_selection",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c2_mat02_sch02_schedule_at_exact_switch",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把分段切换改成右闭区间，切换时刻会用错分段",
+      "kind": "fail_to_pass",
+      "case_id": "mat02"
+    },
+    {
+      "id": "MAT-03",
+      "location": "instruction.md",
+      "source_text": "要按实际的内壁圆柱表面积换算成功率",
+      "behavior": "把内壁圆柱表面积换成端面圆面积，内壁输入功率错误",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c2_mat03_inner_surface_area",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把内壁圆柱表面积换成端面圆面积，内壁输入功率错误",
+      "kind": "fail_to_pass",
+      "case_id": "mat03"
+    },
+    {
+      "id": "MAT-04",
+      "location": "instruction.md",
+      "source_text": "外壁是复合散热边界。",
+      "behavior": "把对流膜热阻放大一倍，外壁对流散热偏小",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c2_mat04_outer_half_cell_and_film",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把对流膜热阻放大一倍，外壁对流散热偏小",
+      "kind": "fail_to_pass",
+      "case_id": "mat04"
+    },
+    {
+      "id": "NUM-01",
+      "location": "instruction.md",
+      "source_text": "`temperatures_c`（按层顺序）",
+      "behavior": "累计内壁输入热量恒为零，能量账目不再守恒",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num01_energy_ledger",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "累计内壁输入热量恒为零，能量账目不再守恒",
+      "kind": "fail_to_pass",
+      "case_id": "num01"
+    },
+    {
+      "id": "NUM-02",
+      "location": "instruction.md",
+      "source_text": "超过上限就应拒绝，恰好等于上限可以接受。",
+      "behavior": "把稳定判据改成严格小于，恰好等于上限也会被拒绝",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num02_exact_stability_boundary",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把稳定判据改成严格小于，恰好等于上限也会被拒绝",
+      "kind": "fail_to_pass",
+      "case_id": "num02"
+    },
+    {
+      "id": "NUM-03",
+      "location": "instruction.md",
+      "source_text": "每步更新前都要检查",
+      "behavior": "超稳定步长不再拒绝，直接继续推进",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num03_unstable_step_has_no_artifact",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "超稳定步长不再拒绝，直接继续推进",
+      "kind": "fail_to_pass",
+      "case_id": "num03"
+    },
+    {
+      "id": "NUM-04",
+      "location": "instruction.md",
+      "source_text": "半径、长度、密度、比热容、基准导热率、时间步都必须为正",
+      "behavior": "关闭工况首段从 0 开始的检查，非法时段不再被拒",
+      "category": "atomic_publish",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "关闭工况首段从 0 开始的检查，非法时段不再被拒",
+      "kind": "fail_to_pass",
+      "case_id": "num04"
+    },
+    {
+      "id": "HEAT-01",
+      "location": "instruction.md",
+      "source_text": "热源功率等于该格的 `q_gen_w_m3` 乘上该格的环形体积",
+      "behavior": "把体积热源功率强制置零，绝热格不再升温",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c4_heat01_generation_heats_insulated_cell",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把体积热源功率强制置零，绝热格不再升温",
+      "kind": "fail_to_pass",
+      "case_id": "heat01"
+    },
+    {
+      "id": "HEAT-02",
+      "location": "instruction.md",
+      "source_text": "`generated_j`、`stored_j`、`residual_j`",
+      "behavior": "累计热源放热量不累加，热源账和残差错",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c4_heat02_generated_ledger_and_residual",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "累计热源放热量不累加，热源账和残差错",
+      "kind": "fail_to_pass",
+      "case_id": "heat02"
+    },
+    {
+      "id": "HEAT-03",
+      "location": "instruction.md",
+      "source_text": "可为正、零或负",
+      "behavior": "对热源取绝对值，负热源被当成热源而不再降温",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c4_heat03_negative_generation_sink",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "对热源取绝对值，负热源被当成热源而不再降温",
+      "kind": "fail_to_pass",
+      "case_id": "heat03"
+    },
+    {
+      "id": "HEAT-04",
+      "location": "instruction.md",
+      "source_text": "边界热流密度和体积热源都不计入稳定判据。",
+      "behavior": "把稳定上限整体缩小一千倍，大热源工况被误判不稳定",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c4_heat04_generation_not_in_stability_limit",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把稳定上限整体缩小一千倍，大热源工况被误判不稳定",
+      "kind": "fail_to_pass",
+      "case_id": "heat04"
+    },
+    {
+      "id": "RAD-01",
+      "location": "instruction.md",
+      "source_text": "外表面还按 Stefan-Boltzmann 定律向外辐射",
+      "behavior": "把辐射分支的判断变量写成不存在的 eta，辐射项不再计算",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c5_rad01_radiation_cools_insulated_surface",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把辐射分支的判断变量写成不存在的 eta，辐射项不再计算",
+      "kind": "fail_to_pass",
+      "case_id": "rad01"
+    },
+    {
+      "id": "RAD-02",
+      "location": "instruction.md",
+      "source_text": "对流与辐射两项叠加成总的外散热功率，外向为正。",
+      "behavior": "外散热只返回对流项，漏掉辐射热流",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c5_rad02_radiation_and_convection_combine",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "外散热只返回对流项，漏掉辐射热流",
+      "kind": "fail_to_pass",
+      "case_id": "rad02"
+    },
+    {
+      "id": "RAD-03",
+      "location": "instruction.md",
+      "source_text": "摄氏温度转开尔文要加 273.15。",
+      "behavior": "辐射项用摄氏温度直接做四次方，高温工况明显偏差",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c5_rad03_radiation_kelvin_scale",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "辐射项用摄氏温度直接做四次方，高温工况明显偏差",
+      "kind": "fail_to_pass",
+      "case_id": "rad03"
+    },
+    {
+      "id": "FULL-01",
+      "location": "instruction.md",
+      "source_text": "输出必须写成一个 JSON 对象，根字段为 `records`",
+      "behavior": "把输出根字段从 records 改成 items，接口契约被破坏",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把输出根字段从 records 改成 items，接口契约被破坏",
+      "kind": "fail_to_pass",
+      "case_id": "full01"
+    },
+    {
+      "id": "VAL-01",
+      "location": "instruction.md",
+      "source_text": "发射率必须在 0 到 1 之间",
+      "behavior": "把发射率上限放宽到 10，非法发射率不再被拒",
+      "category": "atomic_publish",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把发射率上限放宽到 10，非法发射率不再被拒",
+      "kind": "fail_to_pass",
+      "case_id": "val01"
+    },
+    {
+      "id": "VAL-02",
+      "location": "instruction.md",
+      "source_text": "程序只在全部计算成功后才写一次最终 JSON。",
+      "behavior": "失败路径也写一个空输出文件，留下半成品产物",
+      "category": "atomic_publish",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "失败路径也写一个空输出文件，留下半成品产物",
+      "kind": "fail_to_pass",
+      "case_id": "val02"
+    },
+    {
+      "id": "VAL-03",
+      "location": "instruction.md",
+      "source_text": "不要改动命令行接口或任何 JSON 字段名。",
+      "behavior": "把输出根字段从 records 改成 record，接口字段契约被破坏",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把输出根字段从 records 改成 record，接口字段契约被破坏",
+      "kind": "fail_to_pass",
+      "case_id": "ledger"
+    },
+    {
+      "id": "SCH-02",
+      "location": "instruction.md",
+      "source_text": "发射率在 0 到 1 之间",
+      "behavior": "让分段选择永远返回第一段，切换时刻的边界参数失效",
+      "category": "time_selection",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c2_mat02_sch02_schedule_at_exact_switch",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "让分段选择永远返回第一段，切换时刻的边界参数失效",
+      "kind": "fail_to_pass",
+      "case_id": "sch02"
+    },
+    {
+      "id": "TIME-01",
+      "location": "instruction.md",
+      "source_text": "时间用显式欧拉法同步推进",
+      "behavior": "把显式推进步长减半，温度轨迹整体偏离",
+      "category": "json_text",
+      "fixture": "case() 构造的确定性输入",
+      "test_name": "test_c1_geo01_time01_two_layer_radial_flow",
+      "assertion": "直接断言被判程序的输出或退出行为",
+      "counterexample": "把参考解对应代码做一处语法/常量/分支变异后测试失败",
+      "mutation": "把显式推进步长减半，温度轨迹整体偏离",
+      "kind": "fail_to_pass",
+      "case_id": "time01"
+    }
+  ],
+  "semantic_contracts": {
+    "boundary_pairs": {
+      "applicable": true,
+      "items": [
+        {
+          "id": "BP-01",
+          "source_text": "超过上限就应拒绝，恰好等于上限可以接受。",
+          "accept": {
+            "test_name": "test_c3_num02_exact_stability_boundary",
+            "case_id": "num02",
+            "value": "恰好等于稳定上限的步长"
+          },
+          "reject": {
+            "test_name": "test_c3_num03_unstable_step_has_no_artifact",
+            "case_id": "num03",
+            "value": "超过稳定上限的步长"
+          }
+        }
+      ]
+    },
+    "output_contracts": {
+      "applicable": false,
+      "reason": "题面只约定把结果写成 JSON 文件，不涉及标准输出或标准错误通道，因此该类别不适用。"
+    },
+    "failure_stages": {
+      "applicable": false,
+      "reason": "题面只要求非法输入不留产物，不存在多阶段回滚或旧文件迁移流程，因此该类别不适用。"
+    },
+    "timing_contracts": {
+      "applicable": false,
+      "reason": "题面没有给出任何墙钟时间上限，稳定判据约束的是时间步长而不是运行耗时，因此该类别不适用。"
+    }
+  }
+}

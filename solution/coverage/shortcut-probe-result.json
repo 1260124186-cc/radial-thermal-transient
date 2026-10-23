@@ -1,0 +1,14 @@
+{
+  "task_checksum": "d86ce0db91efd34677272e26de98a979b4473aeff59640e96021b3a9fa744cae",
+  "exception_info": null,
+  "verifier_result": {
+    "rewards": {
+      "reward": 0.5
+    }
+  },
+  "config": {
+    "agent": {
+      "model_name": "deepseek-v4-pro"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.4.1, pluggy-1.7.0 -- /usr/local/bin/python
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 20 items / 19 deselected / 1 selected
+
+../tests/test_outputs.py::test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact FAILED [100%]
+
+=================================== FAILURES ===================================
+____ test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact ____
+
+    def test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact():
+        """按题面「不能留下输出文件，也不能覆盖已存在的输出文件」核对非法输入拒收。"""
+        # cases val01 val02 val03: emissivity range, atomic single write, stable CLI contract
+        invalid = [
+            {"radii_m": [0.03, 0.03]},
+            {"layers": [{"rho_kg_m3": 850, "cp_j_kg_k": 980, "k0_w_m_k": -1,
+                         "alpha_per_k": 0, "q_gen_w_m3": 0, "initial_c": 40}]},
+            {"schedule": [{"start_s": 2, "inner_flux_w_m2": 0, "ambient_c": 10,
+                           "h_w_m2_k": 5, "epsilon": 0.0}]},
+            {"schedule": [{"start_s": 0, "inner_flux_w_m2": 0, "ambient_c": 10,
+                           "h_w_m2_k": 5, "epsilon": 1.5}]},
+        ]
+        outcomes = []
+        for change in invalid:
+            data = case(radii=[0.03, 0.07], temperatures=[40])
+            data.update(change)
+            status, payload, _stderr = _run(data, existing="previous valid result")
+            outcomes.append(status != 0 and payload == "previous valid result")
+>       assert all(outcomes)
+E       assert False
+E        +  where False = all([False, False, False, False])
+
+/tests/test_outputs.py:257: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-tfcjgnbe'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-vs65zt3h'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact
+================= 1 failed, 19 deselected, 2 warnings in 0.29s =================

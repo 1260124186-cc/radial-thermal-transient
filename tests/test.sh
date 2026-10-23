@@ -14,6 +14,7 @@ trap 'on_exit' EXIT
 trap 'on_signal' INT TERM HUP
 
 if ! python -m pip install --user --no-cache-dir --disable-pip-version-check \
+  --no-index --find-links /tests/wheels/ \
   --require-hashes --only-binary=:all: -r /tests/requirements.txt; then
   write_zero
   exit 0
@@ -23,8 +24,8 @@ cd /workspace || { write_zero; exit 0; }
 
 # The outer timeout keeps a hung verifier from stalling the run. The score is
 # computed from the junit report, never from this command's exit code.
-timeout 300 python -m pytest -q /tests/test_outputs.py --junitxml="$JUNIT_FILE" \
-  >/logs/verifier/pytest.log 2>&1 || true
+timeout 300 python -m pytest -v /tests/test_outputs.py --junitxml="$JUNIT_FILE" 2>&1 \
+  | tee /logs/verifier/pytest.log || true
 
 if [ ! -s "$JUNIT_FILE" ]; then
   echo "0" > "$REWARD_FILE"

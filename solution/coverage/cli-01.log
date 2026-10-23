@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.4.1, pluggy-1.7.0 -- /usr/local/bin/python
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 20 items / 19 deselected / 1 selected
+
+../tests/test_outputs.py::test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger FAILED [100%]
+
+=================================== FAILURES ===================================
+_______ test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger ________
+
+    def test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger():
+        """按题面「输出必须写成一个 JSON 对象，根字段为 records」核对综合工况的完整账目。"""
+        # cases cli01 val03: stable command line entry point and records field name
+        data = case(radii=[0.018, 0.025, 0.04, 0.07], temperatures=[95, 75, 45],
+                    alpha=0.008, steps=7, dt=3, length=1.8, q_gen=1500)
+        data["layers"][1]["q_gen_w_m3"] = 0
+        data["schedule"].append({"start_s": 9, "inner_flux_w_m2": -60,
+                                 "ambient_c": 6, "h_w_m2_k": 22, "epsilon": 0.9})
+        ok = _matches(_rows(data), reference(data), LEDGER)
+>       assert ok
+E       assert False
+
+/tests/test_outputs.py:331: AssertionError
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-fko5zg82'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:429: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/lastfailed: [Errno 30] Read-only file system: '/tests/pytest-cache-files-yq45ewlk'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED ../tests/test_outputs.py::test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger
+================= 1 failed, 19 deselected, 2 warnings in 0.10s =================

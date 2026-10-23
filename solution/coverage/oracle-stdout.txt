@@ -1,0 +1,35 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.8, pytest-8.4.1, pluggy-1.7.0 -- /usr/local/bin/python
+cachedir: .pytest_cache
+rootdir: /tests
+collecting ... collected 20 items
+
+../tests/test_outputs.py::test_c1_geo01_time01_two_layer_radial_flow PASSED [  5%]
+../tests/test_outputs.py::test_c1_geo02_irregular_cells_and_length PASSED [ 10%]
+../tests/test_outputs.py::test_c1_geo03_heterogeneous_interface PASSED   [ 15%]
+../tests/test_outputs.py::test_c1_geo04_uniform_insulated_state PASSED   [ 20%]
+../tests/test_outputs.py::test_c2_mat01_temperature_dependent_conductivity PASSED [ 25%]
+../tests/test_outputs.py::test_c2_mat02_sch02_schedule_at_exact_switch PASSED [ 30%]
+../tests/test_outputs.py::test_c2_mat03_inner_surface_area PASSED        [ 35%]
+../tests/test_outputs.py::test_c2_mat04_outer_half_cell_and_film PASSED  [ 40%]
+../tests/test_outputs.py::test_c3_num01_energy_ledger PASSED             [ 45%]
+../tests/test_outputs.py::test_c3_num02_exact_stability_boundary PASSED  [ 50%]
+../tests/test_outputs.py::test_c3_num03_unstable_step_has_no_artifact PASSED [ 55%]
+../tests/test_outputs.py::test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact PASSED [ 60%]
+../tests/test_outputs.py::test_c4_heat01_generation_heats_insulated_cell PASSED [ 65%]
+../tests/test_outputs.py::test_c4_heat02_generated_ledger_and_residual PASSED [ 70%]
+../tests/test_outputs.py::test_c4_heat03_negative_generation_sink PASSED [ 75%]
+../tests/test_outputs.py::test_c4_heat04_generation_not_in_stability_limit PASSED [ 80%]
+../tests/test_outputs.py::test_c5_rad01_radiation_cools_insulated_surface PASSED [ 85%]
+../tests/test_outputs.py::test_c5_rad02_radiation_and_convection_combine PASSED [ 90%]
+../tests/test_outputs.py::test_c5_rad03_radiation_kelvin_scale PASSED    [ 95%]
+../tests/test_outputs.py::test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger PASSED [100%]
+
+=============================== warnings summary ===============================
+../home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475
+  /home/worker/.local/lib/python3.12/site-packages/_pytest/cacheprovider.py:475: PytestCacheWarning: could not create cache path /tests/.pytest_cache/v/cache/nodeids: [Errno 30] Read-only file system: '/tests/pytest-cache-files-yg8pd4fa'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+----------------- generated xml file: /logs/verifier/junit.xml -----------------
+======================== 20 passed, 1 warning in 1.71s =========================

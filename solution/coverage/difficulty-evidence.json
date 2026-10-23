@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "task_dir": "/Users/zhangchengcheng/work/ai-project/Trea/harbor/radial-thermal-transient",
+  "direct_translation_attack": {
+    "summary": "题面只给出物理约束，没有给出离散化推导、界面热阻串联形式和稳定判据的线性化，逐句照抄无法得到正确数值。",
+    "why_not_direct": "必须先推导环形控制体的对数半格热阻、温度依赖导热率、辐射线性化导纳和显式稳定条件，再组合成能量守恒账目。",
+    "evidence": [
+      "instruction.md",
+      "solution/geometry.py",
+      "solution/boundary.py",
+      "solution/solver.py"
+    ]
+  },
+  "non_direct_axes": [
+    {
+      "axis": "圆柱径向有限体积离散与界面热阻串联",
+      "why_not_direct": "需要自行推导环形体积以及界面两侧对数热阻的串联形式，不能按平板近似。",
+      "complexity_bound": "三层异质材料叠加温度依赖导热率后，温度和热流相互耦合。",
+      "evidence": [
+        "solution/geometry.py",
+        "solution/evidence/partial-c1.log"
+      ]
+    },
+    {
+      "axis": "辐射非线性与显式稳定判据的线性化",
+      "why_not_direct": "需要把开尔文温标的 T^4 辐射线性化为 4εσAT^3，并并入稳定导纳。",
+      "complexity_bound": "四次方非线性和线性化导纳共同决定可用时间步。",
+      "evidence": [
+        "solution/boundary.py",
+        "solution/solver.py",
+        "solution/evidence/partial-c5.log"
+      ]
+    },
+    {
+      "axis": "内壁外壁热源与储能的能量守恒账目",
+      "why_not_direct": "需要把内壁输入、外散热、体积热源和储能统一到同一残差定义。",
+      "complexity_bound": "五类累计量必须同时成立，且正负热源和分段边界都要一致。",
+      "evidence": [
+        "solution/solver.py",
+        "solution/evidence/partial-c4.log"
+      ]
+    }
+  ],
+  "calibration": {
+    "status": "UNAVAILABLE",
+    "reason": "当前 DeepSeek 代理返回 402 余额不足，暂时无法重跑正式模型校准；已有一次真实模型结果 reward=0.5 作为非满分证据。"
+  },
+  "shortcut_probe": {
+    "result_path": "solution/coverage/shortcut-probe-result.json",
+    "reward": 0.5,
+    "task_checksum": "d86ce0db91efd34677272e26de98a979b4473aeff59640e96021b3a9fa744cae"
+  }
+}

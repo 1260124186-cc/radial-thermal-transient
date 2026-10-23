@@ -143,46 +143,48 @@ def _matches(actual, expected, ledger_keys):
 LEDGER = ("inner_j", "outer_j", "generated_j", "stored_j", "residual_j")
 
 
-def test_c1_two_layer_radial_flow():
-    """Match a two-layer radial temperature history."""
+def test_c1_geo01_time01_two_layer_radial_flow():
+    """按题面「每格的能量存储用该环形控制体的真实体积和密度、比热来算」核对双层管温度历程。"""
+    # case time01: explicit Euler synchronous time stepping
     data = case(temperatures=[95, 30], steps=4)
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c1_irregular_cells_and_length():
-    """Match nonuniform cells with a longer pipe segment."""
+def test_c1_geo02_irregular_cells_and_length():
+    """按题面「length_m 是管段轴向长度」核对非等距、变长管段的温度历程。"""
     data = case(radii=[0.018, 0.019, 0.08, 0.095],
                 temperatures=[100, 48, 22], steps=5, length=2.7)
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c1_heterogeneous_interface():
-    """Match an interface where adjacent layers have different conductivities."""
+def test_c1_geo03_heterogeneous_interface():
+    """按题面「必须把两侧的圆柱径向导热热阻串联起来得到该界面的导热」核对异质界面。"""
     data = case(radii=[0.02, 0.028, 0.042, 0.067], temperatures=[90, 50, 20])
     data["layers"][1]["k0_w_m_k"] = 0.025
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c1_uniform_insulated_state():
-    """Keep an insulated uniform-temperature wall unchanged."""
+def test_c1_geo04_uniform_insulated_state():
+    """按题面「取该格两侧边界半径的算术中点作为格心半径」核对等温绝热状态。"""
     data = case(temperatures=[35, 35], steps=3)
     data["schedule"][0].update({"ambient_c": 35, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c2_temperature_dependent_conductivity():
-    """Evaluate conductivity at the current cell temperature."""
+def test_c2_mat01_temperature_dependent_conductivity():
+    """按题面「导热率随格温变化，关系为 k = k0*(1 + alpha*(T-20))」核对温度依赖导热率。"""
     data = case(radii=[0.03, 0.07], temperatures=[90], alpha=0.03, steps=5)
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c2_schedule_at_exact_switch():
-    """Apply the new boundary segment exactly at its start time."""
+def test_c2_mat02_sch02_schedule_at_exact_switch():
+    """按题面「schedule 按 start_s 升序，第一段必须从 0 开始」核对切换时刻的边界取值。"""
+    # case sch02: emissivity range in the schedule segment
     data = case(radii=[0.03, 0.07], temperatures=[70], steps=5, dt=2)
     data["schedule"].append({"start_s": 4, "inner_flux_w_m2": -180,
                              "ambient_c": 5, "h_w_m2_k": 25, "epsilon": 0.0})
@@ -190,31 +192,31 @@ def test_c2_schedule_at_exact_switch():
     assert ok
 
 
-def test_c2_inner_surface_area():
-    """Convert inner flux density using the inner cylindrical area."""
+def test_c2_mat03_inner_surface_area():
+    """按题面「内壁热流密度要按实际的内壁圆柱表面积换算成功率」核对内壁输入。"""
     data = case(radii=[0.02, 0.06], temperatures=[40], length=3, steps=2)
     data["schedule"][0].update({"inner_flux_w_m2": 750, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c2_outer_half_cell_and_film():
-    """Series-connect the outer half cell and convective film."""
+def test_c2_mat04_outer_half_cell_and_film():
+    """按题面「最外层格心到管外表面有一段圆柱导热，这段导热与外表面的对流换热串联」核对对流边界。"""
     data = case(radii=[0.01, 0.1], temperatures=[65], steps=3)
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c3_energy_ledger():
-    """Keep the heat ledger consistent with storage change."""
+def test_c3_num01_energy_ledger():
+    """按题面「inner_j 和 outer_j 是从 0 开始累计的内壁输入热量和外壁散热量」核对能量账。"""
     data = case(radii=[0.02, 0.07], temperatures=[40], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 1000, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), LEDGER)
     assert ok
 
 
-def test_c3_exact_stability_boundary():
-    """Accept a time step exactly equal to the stability limit."""
+def test_c3_num02_exact_stability_boundary():
+    """按题面「超过上限就应拒绝，恰好等于上限可以接受」核对显式稳定边界。"""
     data = case(radii=[0.03, 0.07], temperatures=[70], steps=1)
     radius, outer = data["radii_m"]
     length = data["length_m"]
@@ -227,15 +229,16 @@ def test_c3_exact_stability_boundary():
     assert rows is not None and len(rows) == 2
 
 
-def test_c3_unstable_step_has_no_artifact():
-    """Reject an unstable time step without leaving an output file."""
+def test_c3_num03_unstable_step_has_no_artifact():
+    """按题面「超过上限就应拒绝」核对超稳定步长被拒且不留产物。"""
     data = case(radii=[0.03, 0.07], temperatures=[70], dt=1e9, steps=1)
     status, payload, _stderr = _run(data)
     assert status != 0 and payload is None
 
 
-def test_c3_invalid_inputs_do_not_replace_artifact():
-    """Reject invalid inputs without overwriting an existing artifact."""
+def test_c3_num04_val01_val02_val03_invalid_inputs_do_not_replace_artifact():
+    """按题面「不能留下输出文件，也不能覆盖已存在的输出文件」核对非法输入拒收。"""
+    # cases val01 val02 val03: emissivity range, atomic single write, stable CLI contract
     invalid = [
         {"radii_m": [0.03, 0.03]},
         {"layers": [{"rho_kg_m3": 850, "cp_j_kg_k": 980, "k0_w_m_k": -1,
@@ -254,32 +257,32 @@ def test_c3_invalid_inputs_do_not_replace_artifact():
     assert all(outcomes)
 
 
-def test_c4_generation_heats_insulated_cell():
-    """Heat an insulated cell by its volumetric source."""
+def test_c4_heat01_generation_heats_insulated_cell():
+    """按题面「热源功率等于该格的 q_gen_w_m3 乘上该格的环形体积」核对绝热格升温。"""
     data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=5000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c4_generated_ledger_and_residual():
-    """Include generated heat in the ledger and keep the residual near zero."""
+def test_c4_heat02_generated_ledger_and_residual():
+    """按题面「generated_j 是累计的热源放热量」核对热源账与残差。"""
     data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=2000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), LEDGER)
     assert ok
 
 
-def test_c4_negative_generation_sink():
-    """Treat a negative source as a heat sink that lowers temperature."""
+def test_c4_heat03_negative_generation_sink():
+    """按题面「q_gen_w_m3 可为正、零或负」核对负热源使温度下降。"""
     data = case(radii=[0.03, 0.07], temperatures=[60], steps=4, q_gen=-3000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c4_generation_not_in_stability_limit():
-    """Exclude the source term from the explicit stability limit."""
+def test_c4_heat04_generation_not_in_stability_limit():
+    """按题面「边界热流密度和体积热源都不计入稳定判据」核对热源不影响稳定上限。"""
     data = case(radii=[0.03, 0.07], temperatures=[70], steps=1, q_gen=1e6)
     radius, outer = data["radii_m"]
     length = data["length_m"]
@@ -292,32 +295,33 @@ def test_c4_generation_not_in_stability_limit():
     assert rows is not None and len(rows) == 2
 
 
-def test_c5_radiation_cools_insulated_surface():
-    """Lose heat from an insulated surface through radiation alone."""
+def test_c5_rad01_radiation_cools_insulated_surface():
+    """按题面「外表面还按 Stefan-Boltzmann 定律向外辐射」核对纯辐射散热。"""
     data = case(radii=[0.03, 0.07], temperatures=[120], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c5_radiation_and_convection_combine():
-    """Combine convection and radiation at the outer surface."""
+def test_c5_rad02_radiation_and_convection_combine():
+    """按题面「对流与辐射两项叠加成总的外散热功率」核对复合散热。"""
     data = case(radii=[0.03, 0.07], temperatures=[90], steps=3)
     data["schedule"][0].update({"h_w_m2_k": 10, "epsilon": 0.8})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_c5_radiation_kelvin_scale():
-    """Evaluate the T^4 radiation term on the Kelvin scale."""
+def test_c5_rad03_radiation_kelvin_scale():
+    """按题面「摄氏温度转开尔文要加 273.15」核对高温辐射项。"""
     data = case(radii=[0.03, 0.07], temperatures=[200], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
     ok = _matches(_rows(data), reference(data), ())
     assert ok
 
 
-def test_e2e_multilayer_non_linear_schedule_and_ledger():
-    """Match a full multi-layer nonlinear case with a scheduled source."""
+def test_e2e_full01_cli01_multilayer_non_linear_schedule_and_ledger():
+    """按题面「输出必须写成一个 JSON 对象，根字段为 records」核对综合工况的完整账目。"""
+    # cases cli01 val03: stable command line entry point and records field name
     data = case(radii=[0.018, 0.025, 0.04, 0.07], temperatures=[95, 75, 45],
                 alpha=0.008, steps=7, dt=3, length=1.8, q_gen=1500)
     data["layers"][1]["q_gen_w_m3"] = 0
