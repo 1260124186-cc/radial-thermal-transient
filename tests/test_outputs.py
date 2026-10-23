@@ -2,6 +2,7 @@
 
 import json
 import math
+import os
 import subprocess
 import sys
 import tempfile
@@ -11,6 +12,8 @@ import pytest
 
 
 SIGMA = 5.670374419e-8
+
+SOLVER_PATH = os.environ.get("RADIAL_HEAT_ENTRY", "/workspace/radial_heat/solver.py")
 
 
 def case(radii=None, temperatures=None, alpha=0.0, schedule=None, dt=1.0, steps=3,
@@ -143,34 +146,39 @@ LEDGER = ("inner_j", "outer_j", "generated_j", "stored_j", "residual_j")
 def test_c1_two_layer_radial_flow():
     """Match a two-layer radial temperature history."""
     data = case(temperatures=[95, 30], steps=4)
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c1_irregular_cells_and_length():
     """Match nonuniform cells with a longer pipe segment."""
     data = case(radii=[0.018, 0.019, 0.08, 0.095],
                 temperatures=[100, 48, 22], steps=5, length=2.7)
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c1_heterogeneous_interface():
     """Match an interface where adjacent layers have different conductivities."""
     data = case(radii=[0.02, 0.028, 0.042, 0.067], temperatures=[90, 50, 20])
     data["layers"][1]["k0_w_m_k"] = 0.025
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c1_uniform_insulated_state():
     """Keep an insulated uniform-temperature wall unchanged."""
     data = case(temperatures=[35, 35], steps=3)
     data["schedule"][0].update({"ambient_c": 35, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c2_temperature_dependent_conductivity():
     """Evaluate conductivity at the current cell temperature."""
     data = case(radii=[0.03, 0.07], temperatures=[90], alpha=0.03, steps=5)
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c2_schedule_at_exact_switch():
@@ -178,27 +186,31 @@ def test_c2_schedule_at_exact_switch():
     data = case(radii=[0.03, 0.07], temperatures=[70], steps=5, dt=2)
     data["schedule"].append({"start_s": 4, "inner_flux_w_m2": -180,
                              "ambient_c": 5, "h_w_m2_k": 25, "epsilon": 0.0})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c2_inner_surface_area():
     """Convert inner flux density using the inner cylindrical area."""
     data = case(radii=[0.02, 0.06], temperatures=[40], length=3, steps=2)
     data["schedule"][0].update({"inner_flux_w_m2": 750, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c2_outer_half_cell_and_film():
     """Series-connect the outer half cell and convective film."""
     data = case(radii=[0.01, 0.1], temperatures=[65], steps=3)
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c3_energy_ledger():
     """Keep the heat ledger consistent with storage change."""
     data = case(radii=[0.02, 0.07], temperatures=[40], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 1000, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), LEDGER)
+    ok = _matches(_rows(data), reference(data), LEDGER)
+    assert ok
 
 
 def test_c3_exact_stability_boundary():
@@ -246,21 +258,24 @@ def test_c4_generation_heats_insulated_cell():
     """Heat an insulated cell by its volumetric source."""
     data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=5000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c4_generated_ledger_and_residual():
     """Include generated heat in the ledger and keep the residual near zero."""
     data = case(radii=[0.03, 0.07], temperatures=[40], steps=4, q_gen=2000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), LEDGER)
+    ok = _matches(_rows(data), reference(data), LEDGER)
+    assert ok
 
 
 def test_c4_negative_generation_sink():
     """Treat a negative source as a heat sink that lowers temperature."""
     data = case(radii=[0.03, 0.07], temperatures=[60], steps=4, q_gen=-3000)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c4_generation_not_in_stability_limit():
@@ -281,21 +296,24 @@ def test_c5_radiation_cools_insulated_surface():
     """Lose heat from an insulated surface through radiation alone."""
     data = case(radii=[0.03, 0.07], temperatures=[120], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c5_radiation_and_convection_combine():
     """Combine convection and radiation at the outer surface."""
     data = case(radii=[0.03, 0.07], temperatures=[90], steps=3)
     data["schedule"][0].update({"h_w_m2_k": 10, "epsilon": 0.8})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_c5_radiation_kelvin_scale():
     """Evaluate the T^4 radiation term on the Kelvin scale."""
     data = case(radii=[0.03, 0.07], temperatures=[200], steps=4)
     data["schedule"][0].update({"inner_flux_w_m2": 0, "h_w_m2_k": 0, "epsilon": 0.9})
-    assert _matches(_rows(data), reference(data), ())
+    ok = _matches(_rows(data), reference(data), ())
+    assert ok
 
 
 def test_e2e_multilayer_non_linear_schedule_and_ledger():
@@ -305,4 +323,5 @@ def test_e2e_multilayer_non_linear_schedule_and_ledger():
     data["layers"][1]["q_gen_w_m3"] = 0
     data["schedule"].append({"start_s": 9, "inner_flux_w_m2": -60,
                              "ambient_c": 6, "h_w_m2_k": 22, "epsilon": 0.9})
-    assert _matches(_rows(data), reference(data), LEDGER)
+    ok = _matches(_rows(data), reference(data), LEDGER)
+    assert ok
